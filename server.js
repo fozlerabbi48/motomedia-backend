@@ -5,6 +5,7 @@ const path = require("path");
 
 const connectDB = require("./config/db");
 const postRoutes = require("./routes/postRoutes");
+const messageRoutes = require("./routes/MessageRoutes");
 
 dotenv.config();
 
@@ -28,6 +29,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/posts", postRoutes);
+
+app.use("/api/messages", messageRoutes);
 
 const PORT = process.env.PORT || 3000;
 
