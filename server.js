@@ -1,26 +1,27 @@
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
-const path = require("path");
+require("dotenv").config();
 
-const connectDB = require("./config/db");
+require("./config/db");
+
+const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
-const messageRoutes = require("./routes/MessageRoutes");
 
-dotenv.config();
+const userRoutes = require("./routes/userRoutes");
+const messageRoutes = require("./routes/MessageRoutes");
 
 const app = express();
 
-connectDB();
-
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use(
-    "/uploads",
-    express.static(path.join(__dirname, "uploads"))
-);
+app.use("/uploads", express.static("uploads"));
+
+app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
+
+app.use("/api/users", userRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.get("/", (req, res) => {
     res.json({
@@ -28,14 +29,8 @@ app.get("/", (req, res) => {
     });
 });
 
-app.use("/api/posts", postRoutes);
-
-app.use("/api/messages", messageRoutes);
-
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(
-        `Backend server running on http://localhost:${PORT}`
-    );
+    console.log(`Backend server running on http://localhost:${PORT}`);
 });
